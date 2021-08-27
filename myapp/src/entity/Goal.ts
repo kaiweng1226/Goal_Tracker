@@ -1,15 +1,18 @@
 import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 
 @Entity()
-export class User {
+export class Goal {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    name: string;
+    goal: string;
 
     @Column()
-    email: string;
+    timeCommitment: number;
+
+    @Column()
+    logging: number;
 
 }

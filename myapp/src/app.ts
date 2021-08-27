@@ -1,4 +1,6 @@
 const express = require('express')
+import {Goal} from "./entity/Goal"
+import {createGoal} from "./db"
 const app = express()
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
@@ -10,11 +12,6 @@ let goals = [
     {id: 3, goal: "Rest", timeCommitment: 180, logging: 5}
 ]
 
-/*
-Model - { id : unique int, goal: string, time-commitment: number/date-format, logging: number }
-[dates]
-*/
-
 app.get('/', (req, res) => {
   res.send({goals:goals})
 })
@@ -25,9 +22,14 @@ app.get('/:goalid', (req, res) => {
 
 app.post('/', function (req, res) {
     console.log(req.body)
-    goals.push(req.body)
-    console.log(goals)
-    res.json(req.body)
+    const goal = new Goal()
+    goal.goal = req.body.goal
+    goal.timeCommitment = req.body.timeCommitment
+    goal.logging = req.body.logging
+    createGoal(goal).then(g => {
+        console.log(g)
+        res.json(g)
+    })
 })
 
 app.put('/:goalid', (req, res) => {
