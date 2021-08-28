@@ -1,14 +1,14 @@
-import  sum  from "../src/sum"
 import route from "../src/goalRoute"
 import { createConnection, getConnection } from "typeorm"
 import * as express from "express";
+// creates another instance of app just for this test
 const app = express();
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use("/", route);
 
 import * as request from "supertest" //
-
+// sets up the connection for the database
 const connection = {
   async create(){
     await createConnection();
@@ -40,10 +40,7 @@ beforeEach(async () => {
   await connection.clear();
 });
 
-
-test('adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3);
-});
+// the actual testing
 describe("Test the root path", () => {
   test("It should get all the goals", async function () {
     const res =
