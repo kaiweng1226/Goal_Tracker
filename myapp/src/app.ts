@@ -44,8 +44,13 @@ createConnection().then(connection => {
     // Create A Goal
 
     app.post('/', async function (req, res) {
-        const goal = await goalRepository.create(req.body)
-        const results = await goalRepository.save(goal)
+        // const goal = await goalRepository.create(req.body)
+        // const results = await goalRepository.save(goal)
+        let goal = new Goal()
+        goal.goal = req.body.goal
+        goal.timeCommitment = req.body.timeCommitment
+        goal.logging = req.body.logging
+        let results = await createGoal(goal)
         return res.send(results)
     })
     
