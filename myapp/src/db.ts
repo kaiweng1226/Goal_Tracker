@@ -31,3 +31,13 @@ export function createGoal(goal:Goal){
     
     }).catch(error => console.log(error));
 }
+
+export function createGoal(goal:Goal){
+    return createConnection().then(async connection => {
+
+        console.log("Inserting a new goal into the database...");
+        let g = await connection.manager.save(goal);
+        return g;
+    
+    }).catch(error => console.log(error));
+}

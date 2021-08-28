@@ -1,54 +1,69 @@
 const express = require('express')
-import {Goal} from "./entity/Goal"
-import {createGoal} from "./db"
 const app = express()
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+import "reflect-metadata";
+import {createConnection} from "typeorm";
+
+import {Goal} from "./entity/Goal"
+import {User} from "./entity/User"
+import {createGoal} from "./db"
+
 const port = 3000
 
+/*
 let goals = [
     {id: 1, goal: "Read", timeCommitment: 60, logging: 5},
     {id: 2, goal: "Run", timeCommitment: 120, logging: 10},
     {id: 3, goal: "Rest", timeCommitment: 180, logging: 5}
 ]
+*/
 
-app.get('/', (req, res) => {
-  res.send({goals:goals})
-})
+// ask about res.json vs return res.send
 
-app.get('/:goalid', (req, res) => {
-    res.send(goals[req.params.goalid - 1])
-})
+createConnection().then(connection => {
+    
+    const userRepository = connection.getRepository(User);
+    const goalRepository = connection.getRepository(Goal);
 
-app.post('/', function (req, res) {
-    console.log(req.body)
-    const goal = new Goal()
-    goal.goal = req.body.goal
-    goal.timeCommitment = req.body.timeCommitment
-    goal.logging = req.body.logging
-    createGoal(goal).then(g => {
-        console.log(g)
-        res.json(g)
+    // Get All Goals
+
+    app.get('/', async (req, res) => {
+        const goals = await goalRepository.find();
+        res.json(goals)
     })
-})
+    
+    // Get Single Goal
 
-app.put('/:goalid', (req, res) => {
-    let keys = Object.keys(req.body)
-    let goal = goals[req.params.goalid -1]
-    keys.forEach((key) => {
-        goal[key] = req.body[key]
+    app.get('/goal/:goalid', async (req, res) => {
+        const goal = await goalRepository.findOne(req.params.goalid)
+        return res.send(goal)
+    })
+      
+    // Create A Goal
+
+    app.post('/', async function (req, res) {
+        const goal = await goalRepository.create(req.body)
+        const results = await goalRepository.save(goal)
+        return res.send(results)
+    })
+    
+    // Update A Goal
+    
+    app.put('/goal/:goalid', async (req, res) => {
+        const goal = await goalRepository.findOne(req.params.goalid)
+        goalRepository.merge(goal, req.body)
+        const results = await goalRepository.save(goal)
+        return res.send(results)
     })
 
-    /* same as forEach
-    for(let i = 0; i < keys.length; i++){
-        goal[keys[i]] = req.body[keys[i]]
-    }
-    */
-   
-    console.log(keys)
-    res.json(goals)
-})
+    // Delete A Goal
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+    app.delete('/goal/:goalid', async (req, res) => {
+        const results = await goalRepository.delete(req.params.goalid)
+        return res.send(results)
+    })
+    
+    app.listen(port, () => console.log(`Listening at http://localhost:${port}`))
 })
