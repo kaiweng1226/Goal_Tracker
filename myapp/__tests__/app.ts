@@ -1,6 +1,7 @@
 import route from "../src/goalRoute"
 import { createConnection, getConnection } from "typeorm"
 import * as express from "express";
+import {Goal} from "../src/entity/Goal"
 // creates another instance of app just for this test
 const app = express();
 app.use(express.json()) // for parsing application/json
@@ -59,7 +60,7 @@ describe("Test the root path", () => {
              timeCommitment: 149,
              logging: 149
             });
-      console.log(res)
-      expect(res.statusCode).toBe(200);
+      const connection = getConnection();
+      expect(connection.manager.findOne(Goal, res.body.id)).toBeDefined();
     });
 })
