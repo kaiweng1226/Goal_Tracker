@@ -1,6 +1,7 @@
 import {Router} from "express"
 import {Goal} from "../entity/Goal"
 import {getAllGoals, getGoal, createGoal, updateGoal, deleteGoal} from "../db"
+import {body, validationResult, param} from 'express-validator';
 
 const router = Router()
 
@@ -13,18 +14,19 @@ router.get('/', async (req, res) => {
 
 // Get Single Goal
 
-router.get('/:goalID', async (req, res) => {
+router.get('/:goalID', param('goalID', "goalID should be a valid number").isInt(), async (req, res) => {
     const goal = await getGoal(req.params.goalID)
-    return res.send(goal)
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    return res.json({goal:goal})
 })
 
 // Create A Goal
 
 router.post('/', async function (req, res) {
-    const goal = new Goal()
-    goal.goal = req.body.goal
-    goal.timeCommitment = req.body.timeCommitment
-    goal.logging = req.body.logging
+    const goal = new Goal(req.body.goal, req.body.timeCommitment, req.body.logging)
     const results = await createGoal(goal)
     return res.send(results)
 })

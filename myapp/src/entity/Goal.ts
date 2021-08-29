@@ -15,4 +15,10 @@ export class Goal {
     @Column()
     logging: number;
 
+    constructor(goal:string, timeCommitment:number, logging:number){
+        this.goal = goal
+        this.timeCommitment = timeCommitment
+        this.logging = logging
+    }
+
 }

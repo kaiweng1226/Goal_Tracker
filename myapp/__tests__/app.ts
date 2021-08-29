@@ -1,4 +1,4 @@
-import route from "../src/goalRoute"
+import route from "../src/routes/goalRoute"
 import { createConnection, getConnection } from "typeorm"
 import * as express from "express";
 import {Goal} from "../src/entity/Goal"
@@ -44,23 +44,71 @@ beforeEach(async () => {
 // the actual testing
 describe("Test the root path", () => {
   test("It should get all the goals", async function () {
+    
+    const connection = getConnection()
+    const goal1 = new Goal("Goal1", 1, 1)
+    const goal2 = new Goal("Goal2", 2, 2)
+    const goal3 = new Goal("Goal3", 3, 3)
+    await connection.manager.save([goal1, goal2, goal3])
+
     const res =
       await request(app)
       .get("/")
-      console.log(res.body)
-      expect(res.statusCode).toBe(200);
-    });
 
-  test("It should create a goal object", async function () {
+    const actual = await connection.manager.find(Goal)
+
+    console.log(res.body)
+    console.log(actual)
+
+    expect(res.body).toEqual(actual)
+    expect(res.statusCode).toBe(200)
+    });
+  })
+
+describe("Test the root path", () => {
+    
+    test("It should create a goal object", async function () {
+      const res =
+        await request(app)
+        .post("/")
+        .set('Content-Type', 'application/json')
+        .send({goal: "hello",
+               timeCommitment: 149,
+               logging: 149
+              });
+        const connection = getConnection();
+        expect(connection.manager.findOne(Goal, res.body.id)).toBeDefined();
+      });
+})
+
+describe("Testing Getting Individual Goals", () => {
+  test("testing invalid goalID param", async function () {
+
     const res =
       await request(app)
-      .post("/")
-      .set('Content-Type', 'application/json')
-      .send({goal: "hello",
-             timeCommitment: 149,
-             logging: 149
-            });
-      const connection = getConnection();
-      expect(connection.manager.findOne(Goal, res.body.id)).toBeDefined();
+      .get("/test")
+
+    expect(res.body.errors).toBeDefined()
+    expect(res.statusCode).toBe(400)
     });
+
+  test("testing valid goalID param", async function () {
+
+    const connection = getConnection()
+    const goal1 = new Goal("Goal1", 1, 1)
+    goal1.id = 100;
+    await connection.manager.save(goal1)
+
+    const res =
+      await request(app)
+      .get("/100")
+    
+    console.log(res.body.goal)
+    expect(res.body.goal).toEqual(goal1)
+    expect(res.statusCode).toBe(200)
+    });
+  
 })
+
+
+
