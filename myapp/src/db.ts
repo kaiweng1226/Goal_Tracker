@@ -36,7 +36,6 @@ export function deleteGoal(goalID){
     return results
 }
 
-
 export function getAllUsers(){
     const connection = getConnection()
     const allUsers = connection.manager.find(User);

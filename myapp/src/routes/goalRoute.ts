@@ -34,8 +34,8 @@ router.post('/', async function (req, res) {
 // Update A Goal
 
 router.put('/:goalID', async (req, res) => {
-    const results = await updateGoal(req.params.goalID, req.body)
-    return res.send(results);
+    const goal = await updateGoal(req.params.goalID, req.body)
+    return res.json({goal:goal});
 })
 
 // Delete A Goal
