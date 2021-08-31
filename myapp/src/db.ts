@@ -3,7 +3,7 @@ import {getConnection} from "typeorm";
 import {Goal} from "./entity/Goal";
 import {User} from "./entity/User";
 
-export function getAllGoals(){
+export async function getAllGoals(){
     const connection = getConnection()
     const allGoals = connection.manager.find(Goal);
     return allGoals

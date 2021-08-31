@@ -16,10 +16,17 @@ router.get('/', async (req, res) => {
 
 router.get('/:goalID', param('goalID', "goalID should be a valid number").isInt(), async (req, res) => {
     const goal = await getGoal(req.params.goalID)
+
     const errors = validationResult(req);
+    
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
+    if(!goal){
+        return res.status(404).json({ errors: `There is no goal with goalID ${req.params.goalID}. Please enter a valid goalID.` });
+    }
+
     return res.json({goal:goal})
 })
 
@@ -33,14 +40,39 @@ router.post('/', async function (req, res) {
 
 // Update A Goal
 
-router.put('/:goalID', async (req, res) => {
+router.put('/:goalID', param('goalID', "goalID should be a valid number").isInt(),async (req, res) => {
+    const checkGoal = await getGoal(req.params.goalID)
+
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    if(!checkGoal){
+        return res.status(404).json({ errors: `There is no goal with goalID ${req.params.goalID}. Please enter a valid goalID.` });
+    }
+
     const goal = await updateGoal(req.params.goalID, req.body)
+    
     return res.json({goal:goal});
 })
 
 // Delete A Goal
 
-router.delete('/:goalID', async (req, res) => {
+router.delete('/:goalID', param('goalID', "goalID should be a valid number").isInt(), async (req, res) => {
+    const checkGoal = await getGoal(req.params.goalID)
+
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    if(!checkGoal){
+        return res.status(404).json({ errors: `There is no goal with goalID ${req.params.goalID}. Please enter a valid goalID.` });
+    }
+
     const results = await deleteGoal(req.params.goalID)
     return res.send(results)
 })

@@ -176,11 +176,11 @@ describe("Test Deleting Existing Goal", () => {
 
     // console.log(res.body)
     // console.log(res2.body)
-    expect(res2.body).toEqual({})
+    
     expect(res.body.errors).toBeUndefined()
-    expect(res2.body.errors).toBeUndefined()
+    expect(res2.body.errors).toBeDefined()
     expect(res.statusCode).toEqual(200)
-    expect(res2.statusCode).toEqual(200)
+    expect(res2.statusCode).toEqual(404)
     });
 
 })
