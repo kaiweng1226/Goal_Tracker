@@ -1,7 +1,8 @@
 import {Router} from "express"
 import {Goal} from "../entity/Goal"
 import {getAllGoals, getGoal, createGoal, updateGoal, deleteGoal} from "../db"
-import {body, validationResult, param} from 'express-validator';
+import {validationResult, param} from 'express-validator';
+
 
 const router = Router()
 
@@ -15,8 +16,9 @@ router.get('/', async (req, res) => {
 // Get Single Goal
 
 router.get('/:goalID', param('goalID', "goalID should be a valid number").isInt(), async (req, res) => {
+    
     const goal = await getGoal(req.params.goalID)
-
+    
     const errors = validationResult(req);
     
     if (!errors.isEmpty()) {
@@ -27,7 +29,25 @@ router.get('/:goalID', param('goalID', "goalID should be a valid number").isInt(
         return res.status(404).json({ errors: `There is no goal with goalID ${req.params.goalID}. Please enter a valid goalID.` });
     }
 
-    return res.json({goal:goal})
+    // return res.json({goal:goal})
+    
+    // return res.render("template.html", goal)
+
+    res.format({
+        'text/html': function () {
+            res.render("template.html", goal)
+
+        },
+      
+        'application/json': function () {
+            res.json({goal:goal})
+        },
+      
+        default: function () {
+          // log the request and respond with 406
+          res.status(406).send('Not Acceptable')
+        }
+      })
 })
 
 // Create A Goal

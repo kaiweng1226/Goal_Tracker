@@ -18,9 +18,27 @@ import * as request from "supertest"
 
 const connection = {
   async create(){
-    await createConnection();
+    await createConnection({
+      "type": "sqlite",
+      "database": "test.sqlite",
+      "synchronize": true,
+      "logging": false,
+      "entities": [
+         "src/entity/**/*.ts"
+      ],
+      "migrations": [
+         "src/migration/**/*.ts"
+      ],
+      "subscribers": [
+         "src/subscriber/**/*.ts"
+      ],
+      "cli": {
+         "entitiesDir": "src/entity",
+         "migrationsDir": "src/migration",
+         "subscribersDir": "src/subscriber"
+      }
+   });
   },
-
   async close(){
     await getConnection().close();
   },
