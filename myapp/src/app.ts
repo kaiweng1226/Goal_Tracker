@@ -17,6 +17,9 @@ app.use(express.urlencoded({extended: true}))       // for parsing application/x
 app.use("/goal", goalRoute);
 app.use("/user", userRoute);
 
+const methodOverride = require('method-override')
+app.use(methodOverride('_method'))
+
 /*
 app.engine('html', renderFile)
 app.set('views', './src/views')
@@ -39,7 +42,7 @@ async function getGoals(){
     return goals
 }
 
-app.get('/hello', async (req,res) => {
+app.get('/', async (req,res) => {
     const goals = await getGoals()
     res.render('index', {title: 'Goal Tracker', goals})
 })

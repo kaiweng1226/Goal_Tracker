@@ -5,14 +5,17 @@
         <label for="goal">Goal</label>
         <input type="text" name="goal" class="form-control">
     </div>
+    <br>
     <div class="form-group">
         <label for="timeCommitment">Time Commitment</label>
         <input type="text" name="timeCommitment" class="form-control">
     </div>
+    <br>
     <div class="form-group">
         <label for="logging">Logging</label>
         <input type="text" name="logging" class="form-control">
     </div>
+    <br>
     <input type="submit" value="Add Goal" class="btn btn-primary btn-block">
 </form>
 <table class="table table-bordered">
@@ -26,6 +29,14 @@
         <td>{{this.goal}}</td>
         <td>{{this.timeCommitment}}</td>
         <td>{{this.logging}}</td>
+        <td>
+            <form action="/goal/{{this.id}}/update" method="GET" class="mb-4">
+                <input type="submit" value="Update" class="btn btn-primary btn-block">
+            </form>
+            <form action="/goal/{{this.id}}/delete" method="GET" class="mb-4">
+                <input type="submit" value="Delete" class="btn btn-primary btn-block">
+            </form>
+        </td>
     </tr>
     {{/each}}
 </table>
