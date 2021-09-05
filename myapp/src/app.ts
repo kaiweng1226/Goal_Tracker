@@ -1,11 +1,10 @@
 import goalRoute from "./routes/goalRoute"
-import userRoute from "./routes/userRoute"
 import "reflect-metadata";
 import {createConnection} from "typeorm"
 import {renderFile} from "squirrelly"
 // for authentication
 import passportConfig from "./auth/passport-conf";
-import session from "express-session";
+import * as session from "express-session";
 import * as passport from "passport";
 import * as express from "express"
 export const app = express()
@@ -13,7 +12,6 @@ export const app = express()
 app.use(express.json())                             // for parsing application/json
 app.use(express.urlencoded({extended: true}))       // for parsing application/x-www-form-urlencoded
 app.use("/goal", goalRoute);
-app.use("/user", userRoute);
 app.engine('html', renderFile)
 // Authentication middleware
 app.set('trust proxy', 1) // trust first proxy
