@@ -1,5 +1,8 @@
 <h1 class="text-center mb-3">{{title}}</h1>
-<h4>Goals</h4>
+
+<br>
+
+<!--
 <form action="/goal" method="POST" class="mb-4">
     <div class="form-group">
         <label for="goal">Goal</label>
@@ -18,11 +21,19 @@
     <br>
     <input type="submit" value="Add Goal" class="btn btn-primary btn-block">
 </form>
+-->
+
 <table class="table table-bordered">
     <tr>
         <th>Goal</th>
         <th>Time Commitment</th>
         <th>Logging</th>
+        <th>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#addGoal">
+            Add Goal
+            </button>
+        </th>
     </tr>
     {{#each goals}}
     <tr>
@@ -32,7 +43,11 @@
         <td>
             <form action="/goal/{{this.id}}/update" method="GET" class="mb-4">
                 <input type="submit" value="Update" class="btn btn-primary btn-block">
+                <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#updateGoal">
+                Update Goal
+                </button>
             </form>
+            <!-- <iframe name="dummyframe" id="dummyframe" style="display: none; "></iframe> -->
             <form action="/goal/{{this.id}}/delete" method="GET" class="mb-4">
                 <input type="submit" value="Delete" class="btn btn-primary btn-block">
             </form>
@@ -40,3 +55,77 @@
     </tr>
     {{/each}}
 </table>
+
+<!-- Modal for Adding a Goal -->
+<div class="modal fade" id="addGoal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Goal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form action="/goal" method="POST" class="mb-4">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="goal">Goal</label>
+                    <input type="text" name="goal" class="form-control">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="timeCommitment">Time Commitment</label>
+                    <input type="text" name="timeCommitment" class="form-control">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="logging">Logging</label>
+                    <input type="text" name="logging" class="form-control">
+                </div>
+                <br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" value="Save Goal" class="btn btn-primary btn-block">
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Updating a Goal -->
+<div class="modal fade" id="updateGoal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Goal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <form action="/goal/{{this.id}}/update" method="GET" class="mb-4">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="goal">Goal</label>
+                    <input type="text" name="goal" class="form-control">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="timeCommitment">Time Commitment</label>
+                    <input type="text" name="timeCommitment" class="form-control">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="logging">Logging</label>
+                    <input type="text" name="logging" class="form-control">
+                </div>
+                <br>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="submit" value="Save Changes" class="btn btn-primary btn-block">
+            </div>
+        </form>
+    </div>
+  </div>
+</div>
