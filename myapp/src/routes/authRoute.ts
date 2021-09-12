@@ -18,9 +18,9 @@ export const registerUser = async (req: Request, res: Response) => {
         if (user !== undefined) {
             return res.status(401).send("User already exists");
         }
-        // const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
         // The API might be differerent to create the user?
-        const newUser = new User(req.body.username, req.body.email, req.body.password)
+        const newUser = new User(req.body.username, req.body.email, hashedPassword)
         const createdUser = await createUser(newUser)
         
         res.status(201).send(`Registered User with id: ${createdUser.id}`);

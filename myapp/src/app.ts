@@ -10,12 +10,11 @@ import * as session from "express-session";
 import * as passport from "passport";
 import * as express from "express"
 export const app = express()
-
+// IMPORTANT: Order matters when it comes to middle ware
 app.use(express.json())                             // for parsing application/json
 app.use(express.urlencoded({extended: true}))       // for parsing application/x-www-form-urlencoded
-app.use("/auth", authRoute)
-app.use("/goal", goalRoute);
 app.engine('html', renderFile)
+app.set('views', './src/views')
 // Authentication middleware
 app.set('trust proxy', 1) // trust first proxy
 app.use(session({
@@ -24,9 +23,15 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: true }
 }))
+
 app.use(passport.initialize());
 app.use(passport.session());
-app.set('views', './src/views')
+passportConfig(passport) // might fix the error
+
+
+app.use("/auth", authRoute)
+app.use("/goal", goalRoute);
+
 
 const port = 3000
 
