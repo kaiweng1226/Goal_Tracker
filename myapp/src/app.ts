@@ -1,15 +1,21 @@
+const express = require('express')
+const mongoose = require('mongoose')
+const session = require('express-session')
+var passport = require('passport')
+var crypto = require('crypto')
+// var routes = require('./routes')
+const connection = require('./config/database')
+
 import goalRoute from "./routes/goalRoute"
 import userRoute from "./routes/userRoute"
 import "reflect-metadata";
 import {createConnection} from "typeorm"
-import {renderFile} from "squirrelly"
 
 // testing out handlebars *****
 import {getAllGoals} from "./db";
-import { Goal } from "./entity/Goal";
 const exphbs = require('express-handlebars')
 
-const express = require('express')
+
 export const app = express()
 
 app.use(express.json())                             // for parsing application/json
@@ -19,17 +25,6 @@ app.use("/user", userRoute);
 
 const methodOverride = require('method-override')
 app.use(methodOverride('_method'))
-
-/*
-app.engine('html', renderFile)
-app.set('views', './src/views')
-*/
-
-/*
-app.get('/', (req, res) => {
-    res.render("template.html", {Hello: "World"})
-})
-*/
 
 // Handlebars Middleware *****
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
