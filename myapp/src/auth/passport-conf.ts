@@ -2,6 +2,7 @@ import { PassportStatic } from "passport";
 import * as passportLocal from "passport-local";
 import * as bcrypt from "bcrypt";
 import { getUserByEmail, getUserById } from "../db/user-actions"; // TODO make the files
+import { User } from "../entity/User"
 export default (passport: PassportStatic) => {
     const authenticateUser: passportLocal.VerifyFunction = async (
         email,
@@ -33,7 +34,7 @@ export default (passport: PassportStatic) => {
         ),
     );
 
-    passport.serializeUser((user: { id: number }, done) => {
+    passport.serializeUser((user: User, done) => {
         return done(null, user.id);
     });
     passport.deserializeUser(async (id: number, done) => {

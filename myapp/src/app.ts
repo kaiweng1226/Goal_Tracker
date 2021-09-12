@@ -21,7 +21,9 @@ app.use(session({
   secret: 'keyboard cat', // TODO get the secret from an environment var
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }
+  // cookie: { secure: true } // set this to true in production environment
+  // TODO I need to store the sessions in the database for this to work!!!
+    // use the `connnect-typeorm` session store to work with typeorm
 }))
 
 app.use(passport.initialize());
@@ -31,6 +33,16 @@ passportConfig(passport) // might fix the error
 
 app.use("/auth", authRoute)
 app.use("/goal", goalRoute);
+// used to test if express session is working correctly
+app.get("/tracker", (req, res) => {
+  // makesure to override the type in ./types/global.d.ts
+ if (req.session.viewCount) {
+    req.session.viewCount = req.session.viewCount + 1;
+  } else {
+    req.session.viewCount = 1;
+  }  res.send("<p>View count is: " + req.session.viewCount + "</p>");
+
+})
 
 
 const port = 3000

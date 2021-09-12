@@ -49,7 +49,7 @@ export const login = async (
             if (!usr) return res.send("No User Exists");
             req.login(usr, (err) => {
                 if (err) throw err;
-                res.send("You were authenticated & logged in!\n");
+                res.send(`logged in as: ${req.user.name}`);
             });
         })(req, res, next);
     } catch (e) {
@@ -92,4 +92,15 @@ router.get('/login', (req, res, next) => {
 
 });
 
+router.get('/', ensureAuthenticated, (req, res) => {
+    res.send(`logged in as ${req.user.name}`)
+})
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated())
+        return next();
+    else{
+        res.send('/auth/login')
+    }
+}
 export default router
